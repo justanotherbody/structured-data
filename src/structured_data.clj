@@ -64,40 +64,48 @@
   (not (contains? author :death-year)))
 
 (defn element-lengths [collection]
-  :-)
+  (map count collection))
 
 (defn second-elements [collection]
-  :-)
+  (let [second (fn [x] (first (rest x)))]
+    (map second collection)))
 
 (defn titles [books]
-  :-)
+  (map :title books))
 
 (defn monotonic? [a-seq]
-  :-)
+  (or (apply <= a-seq) (apply >= a-seq)))
 
 (defn stars [n]
-  :-)
+  (apply str (repeat n "*")))
 
 (defn toggle [a-set elem]
-  :-)
+  (if (contains? a-set elem)
+    (disj a-set elem)
+    (conj a-set elem)))
 
 (defn contains-duplicates? [a-seq]
-  :-)
+  (< (count (set a-seq)) (count a-seq)))
 
 (defn old-book->new-book [book]
-  :-)
+  (let [author-vector (:authors book)]
+    (assoc book :authors (set author-vector))))
 
 (defn has-author? [book author]
-  :-)
+  (contains? (:authors book) author))
 
 (defn authors [books]
-  :-)
+  (let [authors-vectors (map :authors books)]
+    (apply clojure.set/union (map set authors-vectors))))
 
 (defn all-author-names [books]
-  :-)
+  (set (map :name (authors books))))
 
 (defn author->string [author]
-  :-)
+  (let [years
+        (fn [author] (if (contains? author :birth-year)
+                       (str " ("(:birth-year author) " - " (:death-year author) ")")))]
+  (str (:name author) (years author))))
 
 (defn authors->string [authors]
   :-)
