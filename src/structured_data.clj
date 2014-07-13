@@ -53,7 +53,7 @@
   (count (:authors book)))
 
 (defn multiple-authors? [book]
-  (> 1 (author-count book)))
+  (> (author-count book) 1))
 
 (defn add-author [book new-author]
   (let [authors (:authors book)
@@ -108,27 +108,38 @@
   (str (:name author) (years author))))
 
 (defn authors->string [authors]
-  :-)
+  (apply str (interpose ", " (map author->string authors))))
 
 (defn book->string [book]
-  :-)
+  (str (:title book) ", written by " (authors->string (:authors book))))
 
 (defn books->string [books]
-  :-)
+  (if (empty? books)
+    "No books."
+    (let [nbooks (count books)
+          bookword (if (= nbooks 1) "book" "books")
+          preamble (str nbooks " " bookword)
+          books-info (apply str (interpose ". " (map book->string books)))]
+    (str preamble ". " books-info "."))))
 
 (defn books-by-author [author books]
-  :-)
+  (let [has-author? (fn [book] (contains? (:authors book) author))]
+    (filter has-author? books)))
 
 (defn author-by-name [name authors]
-  :-)
+  (let [has-name? (fn [author] (= name (:name author)))
+        authors-with-name (filter has-name? authors)]
+    (if (empty? authors-with-name)
+      nil
+      (first authors-with-name))))
 
 (defn living-authors [authors]
-  :-)
+  (filter alive? authors))
 
 (defn has-a-living-author? [book]
-  :-)
+  (not (empty? (filter alive? (:authors book)))))
 
 (defn books-by-living-authors [books]
-  :-)
+  (filter has-a-living-author? books))
 
 ; %________%
